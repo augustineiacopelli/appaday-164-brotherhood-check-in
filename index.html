@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="apple-touch-icon" href="https://augustineiacopelli.github.io/appaday/icons/164.png">
+<meta name="apple-mobile-web-app-title" content="Brotherhood">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="manifest" href="https://augustineiacopelli.github.io/appaday/manifests/164.webmanifest">
+<script src="https://augustineiacopelli.github.io/appaday/save.js" defer></script>
+<title>Brotherhood Check-In | AppADay 164</title>
+<meta name="description" content="A private weekly accountability practice for men's groups and accountability partners. Nothing leaves your phone.">
+<meta name="theme-color" content="#16111d">
+<style>
+:root{
+  --bg:#16111d;
+  --bg2:#0d0a12;
+  --surface:#211a2b;
+  --surface2:#2b2238;
+  --line:rgba(243,236,226,.12);
+  --line2:rgba(243,236,226,.22);
+  --ink:#f3ece2;
+  --muted:#b7accb;
+  --faint:#7d7290;
+  --accent:#6A4C93;
+  --accent-hi:#a98bd6;
+  --accent-soft:rgba(106,76,147,.28);
+  --miss:#e0a560;
+  --danger:#e06a6a;
+  --serif:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{
+  margin:0;min-height:100dvh;display:flex;flex-direction:column;
+  background:radial-gradient(130% 640px at 50% 0%,#2a1d3d 0%,rgba(22,17,29,0) 75%) no-repeat,var(--bg);
+  color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.45;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+a{color:var(--accent-hi)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+.wrap{width:100%;max-width:760px;margin:0 auto;padding:0 16px}
+
+/* Header */
+header.top{padding-top:calc(10px + env(safe-area-inset-top))}
+.toprow{display:flex;align-items:center;gap:10px;min-height:52px}
+.num{flex:none;font-family:var(--serif);font-size:.85rem;letter-spacing:.06em;
+  background:var(--accent);color:#fff;border-radius:8px;padding:4px 8px}
+.ttl{flex:1;min-width:0}
+.ttl h1{margin:0;font-family:var(--serif);font-weight:normal;font-size:clamp(1.2rem,4.6vw,1.6rem);line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl a{font-size:.8rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin:-10px 0}
+.ttl a:hover{color:var(--ink)}
+.iconbtn{flex:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);
+  background:var(--surface);display:grid;place-items:center;color:var(--ink)}
+.iconbtn:active{background:var(--surface2)}
+.iconbtn svg{width:22px;height:22px}
+
+/* Privacy banner */
+.privacy{display:flex;gap:10px;align-items:flex-start;margin:10px 0 12px;padding:10px 12px;
+  border:1px solid var(--accent-soft);background:rgba(106,76,147,.14);border-radius:12px;font-size:.88rem;color:var(--ink)}
+.privacy svg{flex:none;width:18px;height:18px;margin-top:2px;color:var(--accent-hi)}
+.privacy b{font-weight:600}
+
+/* Tabs */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px}
+.tab{min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:600;font-size:.92rem}
+.tab[aria-selected="true"]{background:var(--accent);color:#fff}
+
+/* Week nav */
+.weeknav{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
+.weeknav .lbl{flex:1;text-align:center;min-width:0}
+.weeknav .lbl b{display:block;font-family:var(--serif);font-weight:normal;font-size:1.08rem}
+.weeknav .lbl span{font-size:.78rem;color:var(--muted)}
+.weeknav .iconbtn[disabled]{opacity:.35;cursor:default}
+.today{border:1px solid var(--line);background:transparent;color:var(--accent-hi);border-radius:999px;
+  min-height:32px;padding:0 12px;font-size:.78rem;margin-top:2px}
+
+main{flex:1;padding-bottom:24px}
+.panel[hidden]{display:none}
+.hint{color:var(--muted);font-size:.86rem;margin:8px 2px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:12px 0}
+.card h2{margin:0;font-family:var(--serif);font-weight:normal;font-size:1.2rem;display:flex;align-items:center;gap:8px}
+.card .prompt{margin:4px 0 12px;color:var(--muted);font-size:.9rem}
+.shield{display:inline-flex;align-items:center;gap:4px;font-family:var(--sans);font-size:.7rem;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--miss);border:1px solid rgba(224,165,96,.4);border-radius:999px;padding:2px 8px}
+.shield svg{width:12px;height:12px}
+.prev{border-left:3px solid var(--accent);background:var(--surface2);border-radius:0 10px 10px 0;padding:8px 10px;margin-bottom:10px}
+.prev small{display:block;color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.05em}
+.prev p{margin:2px 0 0;white-space:pre-wrap;word-wrap:break-word}
+.nocommit{font-size:.85rem;color:var(--faint);margin:0 0 10px;font-style:italic}
+.kept{display:flex;gap:8px;margin-bottom:12px}
+.pill{flex:1;min-height:44px;border-radius:999px;border:1px solid var(--line2);background:transparent;font-weight:600;font-size:.9rem;color:var(--muted)}
+.pill.yes[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.pill.no[aria-pressed="true"]{background:rgba(224,165,96,.18);border-color:var(--miss);color:var(--miss)}
+label.fld{display:block;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:10px 0 4px}
+textarea,input[type="text"]{width:100%;border:1px solid var(--line2);background:var(--bg2);border-radius:10px;
+  padding:10px 12px;font-size:1rem;line-height:1.4;resize:vertical}
+textarea{min-height:84px}
+textarea.short{min-height:56px}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:var(--accent-hi)}
+
+.btn{min-height:48px;border-radius:12px;border:1px solid var(--accent);background:var(--accent);color:#fff;
+  font-weight:600;padding:0 18px;font-size:.95rem}
+.btn.ghost{background:transparent;color:var(--accent-hi);border-color:var(--line2)}
+.btn.wide{width:100%}
+.btn.danger{background:transparent;color:var(--danger);border-color:rgba(224,106,106,.5)}
+.btn.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn.small{min-height:44px;padding:0 12px;font-size:.85rem}
+.saverow{display:flex;align-items:center;gap:12px;margin-top:8px}
+.saverow .status{font-size:.82rem;color:var(--muted);flex:1}
+
+/* Patterns */
+.grid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 6px;margin:12px 0}
+.grow{display:grid;grid-template-columns:minmax(0,1fr) repeat(8,26px);align-items:center;column-gap:2px}
+.ghead{padding:2px 6px 6px;font-size:.66rem;color:var(--faint);text-align:center}
+.ghead span:first-child{text-align:left}
+.ghead .cur{color:var(--accent-hi);font-weight:700}
+button.grow{width:100%;min-height:48px;border:0;border-radius:10px;background:transparent;padding:4px 6px;text-align:left}
+button.grow + button.grow{border-top:1px solid var(--line);border-radius:0}
+button.grow[aria-expanded="true"]{background:var(--accent-soft);border-radius:10px}
+.rl{min-width:0}
+.rl b{display:block;font-weight:600;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl span{font-size:.72rem;color:var(--muted)}
+.cell{display:grid;place-items:center;height:26px}
+.dot{width:14px;height:14px;border-radius:50%}
+.dot.y{background:var(--accent-hi)}
+.dot.n{border:2px solid var(--miss)}
+.dot.u{width:10px;height:2px;border-radius:2px;background:var(--faint);opacity:.6}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--muted);margin:4px 2px}
+.legend i{display:inline-block;vertical-align:middle;margin-right:6px}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.compare .c34{display:none}
+@media (min-width:700px){.compare{grid-template-columns:repeat(4,minmax(0,1fr))}.compare .c34{display:block}}
+.col{background:var(--surface2);border-radius:10px;padding:10px;min-width:0}
+.col h3{margin:0 0 6px;font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.col .k{font-size:.8rem;font-weight:600;margin-bottom:6px}
+.col .k.y{color:var(--accent-hi)}.col .k.n{color:var(--miss)}.col .k.u{color:var(--faint)}
+.col p{margin:0 0 8px;white-space:pre-wrap;word-wrap:break-word;font-size:.9rem}
+.col small{display:block;color:var(--faint);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}
+.empty{color:var(--faint);font-style:italic}
+.rate{margin:10px 0 0;font-size:.9rem}
+
+/* Summary */
+.incl{display:flex;align-items:center;gap:12px;min-height:48px;padding:4px 2px;border-bottom:1px solid var(--line)}
+.incl:last-child{border-bottom:0}
+.incl input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.incl span{flex:1}
+.warn{margin:12px 0 0;padding:10px 12px;border-radius:10px;border:1px solid rgba(224,165,96,.45);
+  background:rgba(224,165,96,.1);color:var(--miss);font-size:.88rem}
+textarea.out{min-height:220px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85rem}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btnrow .btn{flex:1}
+
+footer{padding:16px 0 calc(20px + env(safe-area-inset-bottom));text-align:center;font-size:.82rem;color:var(--faint)}
+footer a{display:inline-flex;align-items:center;min-height:44px}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(6,4,10,.72);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.modal[hidden]{display:none}
+.sheet{width:100%;max-width:640px;max-height:92dvh;overflow:auto;background:var(--bg);border:1px solid var(--line2);
+  border-radius:18px 18px 0 0;padding:0 16px calc(20px + env(safe-area-inset-bottom))}
+@media (min-width:700px){.modal{align-items:center}.sheet{border-radius:18px}}
+.sheethead{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;gap:10px;padding:12px 0;z-index:1;border-bottom:1px solid var(--line)}
+.sheethead h2{flex:1;margin:0;font-family:var(--serif);font-weight:normal;font-size:1.25rem}
+.sheet h3{font-family:var(--serif);font-weight:normal;font-size:1.05rem;margin:18px 0 6px}
+.qed{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0}
+.qed .row{display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.qed .row .grow1{flex:1}
+.check{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:.88rem;color:var(--muted)}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.mini{width:44px;height:44px;border-radius:10px;border:1px solid var(--line2);background:transparent;display:grid;place-items:center}
+.mini svg{width:18px;height:18px}
+.mini[disabled]{opacity:.3;cursor:default}
+.about{font-size:.86rem;color:var(--muted)}
+.choice{display:flex;gap:10px;margin-top:10px}
+.choice[hidden]{display:none}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:.9rem;
+  transition:opacity .2s,transform .2s;pointer-events:none;z-index:30;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="toprow">
+      <span class="num">164</span>
+      <div class="ttl">
+        <h1>Brotherhood Check-In</h1>
+        <a href="https://augustineiacopelli.github.io/appaday/">&larr; AppADay portfolio</a>
+      </div>
+      <button class="iconbtn" id="gear" aria-label="Settings" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <div class="privacy" role="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <div><b>Private by design.</b> Everything you write stays on this phone. Nothing is sent anywhere, and you choose exactly what to share.</div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-week" aria-controls="p-week" aria-selected="true">This Week</button>
+      <button class="tab" role="tab" id="t-pat" aria-controls="p-pat" aria-selected="false">Patterns</button>
+      <button class="tab" role="tab" id="t-sum" aria-controls="p-sum" aria-selected="false">Summary</button>
+    </div>
+    <div class="weeknav">
+      <button class="iconbtn" id="wprev" aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="lbl"><b id="wlabel">Week</b><span id="wsub"></span></div>
+      <button class="iconbtn" id="wnext" aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel" id="p-week" role="tabpanel" aria-labelledby="t-week"></section>
+  <section class="panel" id="p-pat" role="tabpanel" aria-labelledby="t-pat" hidden></section>
+  <section class="panel" id="p-sum" role="tabpanel" aria-labelledby="t-sum" hidden></section>
+</main>
+
+<footer class="wrap">
+  <a href="https://augustineiacopelli.github.io/appaday/">AppADay 164 &middot; Brotherhood Check-In &middot; Back to the portfolio</a>
+</footer>
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <div class="sheethead">
+      <h2 id="mtitle">Settings</h2>
+      <button class="iconbtn" id="mclose" aria-label="Close settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div id="mbody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="importFile" accept="application/json,.json" class="sr" tabindex="-1" aria-hidden="true">
+
+<script>
+(function(){
+'use strict';
+
+var KEY = 'appaday-164-brotherhood';
+var VERSION = 1;
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var DEFAULTS = [
+  {id:'prayer', label:'Prayer', prompt:'How was your prayer life this week? Did you keep a daily time with God?', sensitive:false},
+  {id:'honesty', label:'Honesty', prompt:'Where were you less than truthful, with others or with yourself?', sensitive:true},
+  {id:'purity', label:'Purity', prompt:'How did you guard your eyes, your thoughts, and your heart?', sensitive:true},
+  {id:'work', label:'Work', prompt:'Did you give an honest day\'s work and keep work in its place?', sensitive:false},
+  {id:'family', label:'Family', prompt:'How did you love and serve your family?', sensitive:false},
+  {id:'service', label:'Service', prompt:'Whom did you serve without being asked?', sensitive:false}
+];
+var CLOSING = 'Pray for me this week, brothers, and I will pray for you.';
+
+var SHIELD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+var UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
+var DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+/* ---------- dates (always local calendar, never UTC) ---------- */
+function pad(n){ return (n < 10 ? '0' : '') + n; }
+function keyOf(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function sundayKey(d){
+  var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - x.getDay());
+  return keyOf(x);
+}
+function parseKey(k){ var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function addWeeks(k, n){ var d = parseKey(k); d.setDate(d.getDate() + 7 * n); return keyOf(d); }
+function fmtLong(k){ var d = parseKey(k); return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear(); }
+function fmtShort(k){ var d = parseKey(k); return (d.getMonth() + 1) + '/' + d.getDate(); }
+function fmtRange(k){
+  var a = parseKey(k), b = parseKey(addWeeks(k, 1)); b.setDate(b.getDate() - 1);
+  return MONTHS[a.getMonth()] + ' ' + a.getDate() + ' to ' + MONTHS[b.getMonth()] + ' ' + b.getDate();
+}
+function fmtTime(ts){
+  var d = new Date(ts), h = d.getHours(), m = d.getMinutes();
+  var ap = h >= 12 ? 'PM' : 'AM'; h = h % 12; if (h === 0) h = 12;
+  return h + ':' + pad(m) + ' ' + ap;
+}
+function isKey(k){ return typeof k === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(k); }
+
+/* ---------- helpers ---------- */
+function esc(s){
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function $(id){ return document.getElementById(id); }
+function newId(){ return 'q' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36); }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function seedQuestions(){
+  return DEFAULTS.map(function(q, i){ return {id:q.id, label:q.label, prompt:q.prompt, sensitive:q.sensitive, order:i}; });
+}
+
+var toastTimer = null;
+function toast(msg){
+  var t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* Inline tap-twice confirm for destructive actions. */
+function armConfirm(btn, action){
+  if (btn.getAttribute('data-armed') === '1') {
+    clearTimeout(btn._t); btn.setAttribute('data-armed','0'); btn.classList.remove('armed');
+    btn.textContent = btn.getAttribute('data-label'); action(); return;
+  }
+  btn.setAttribute('data-label', btn.textContent);
+  btn.setAttribute('data-armed','1'); btn.classList.add('armed'); btn.textContent = 'Tap again to confirm';
+  btn._t = setTimeout(function(){
+    btn.setAttribute('data-armed','0'); btn.classList.remove('armed'); btn.textContent = btn.getAttribute('data-label');
+  }, 4000);
+}
+
+/* ---------- storage ---------- */
+function cleanQuestion(q, i){
+  if (!q || typeof q.id !== 'string' || !q.id) return null;
+  return {
+    id: q.id.slice(0, 64),
+    label: typeof q.label === 'string' && q.label.trim() ? q.label.slice(0, 60) : 'Question',
+    prompt: typeof q.prompt === 'string' ? q.prompt.slice(0, 400) : '',
+    sensitive: !!q.sensitive,
+    order: typeof q.order === 'number' ? q.order : i
+  };
+}
+function cleanEntry(e){
+  if (!e || typeof e !== 'object') return null;
+  return {
+    answer: typeof e.answer === 'string' ? e.answer : '',
+    kept: e.kept === 'yes' || e.kept === 'no' ? e.kept : '',
+    next: typeof e.next === 'string' ? e.next : '',
+    savedAt: typeof e.savedAt === 'number' ? e.savedAt : 0
+  };
+}
+function sanitize(obj){
+  if (!obj || typeof obj !== 'object' || !Array.isArray(obj.questions) || !obj.weeks || typeof obj.weeks !== 'object') return null;
+  var qs = [], seen = {};
+  obj.questions.forEach(function(q, i){ var c = cleanQuestion(q, i); if (c && !seen[c.id]) { seen[c.id] = 1; qs.push(c); } });
+  var weeks = {};
+  Object.keys(obj.weeks).forEach(function(k){
+    if (!isKey(k)) return;
+    var src = obj.weeks[k]; if (!src || typeof src !== 'object') return;
+    var wk = {};
+    Object.keys(src).forEach(function(qid){ var e = cleanEntry(src[qid]); if (e) wk[qid] = e; });
+    if (Object.keys(wk).length) weeks[k] = wk;
+  });
+  return {version: VERSION, questions: qs, weeks: weeks};
+}
+function load(){
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var d = sanitize(JSON.parse(raw)); if (d) return d; }
+  } catch (e) {}
+  return {version: VERSION, questions: seedQuestions(), weeks: {}};
+}
+function persist(){
+  try { localStorage.setItem(KEY, JSON.stringify(data)); return true; }
+  catch (e) { toast('Could not save on this device'); return false; }
+}
+
+/* ---------- state ---------- */
+var data = load();
+var today = sundayKey(new Date());
+var view = today;
+var tab = 'week';
+var openRow = null;
+var summaryInc = {};
+var summaryClosing = true;
+var lastSaved = 0;
+
+function questions(){ return data.questions.slice().sort(function(a, b){ return a.order - b.order; }); }
+function renumber(){ questions().forEach(function(q, i){ q.order = i; }); }
+function entry(k, qid){ return data.weeks[k] && data.weeks[k][qid] ? data.weeks[k][qid] : null; }
+function setEntry(k, qid, patch){
+  var cur = entry(k, qid) || {answer:'', kept:'', next:'', savedAt:0};
+  var n = {answer:cur.answer, kept:cur.kept, next:cur.next, savedAt:Date.now()};
+  Object.keys(patch).forEach(function(p){ n[p] = patch[p]; });
+  if (!n.answer.trim() && !n.next.trim() && !n.kept) {
+    if (data.weeks[k]) { delete data.weeks[k][qid]; if (!Object.keys(data.weeks[k]).length) delete data.weeks[k]; }
+  } else {
+    if (!data.weeks[k]) data.weeks[k] = {};
+    data.weeks[k][qid] = n;
+  }
+  if (persist()) lastSaved = Date.now();
+}
+function resetSummary(){
+  summaryInc = {};
+  questions().forEach(function(q){ summaryInc[q.id] = !q.sensitive; });
+}
+
+/* ---------- week nav ---------- */
+function renderNav(){
+  $('wlabel').textContent = (view === today ? 'This week, ' : 'Week of ') + fmtLong(view);
+  $('wsub').innerHTML = esc(fmtRange(view)) + (view !== today ? ' <button class="today" id="wtoday">Jump to this week</button>' : '');
+  $('wnext').disabled = view >= today;
+}
+function goWeek(k){
+  flushWeekFields();
+  view = k; openRow = null; resetSummary(); renderAll();
+}
+
+/* ---------- This Week ---------- */
+function renderWeek(){
+  var prevK = addWeeks(view, -1), h = '';
+  var qs = questions();
+  if (!qs.length) h += '<p class="hint">No questions yet. Add some in Settings.</p>';
+  qs.forEach(function(q){
+    var e = entry(view, q.id) || {answer:'', kept:'', next:''};
+    var pe = entry(prevK, q.id);
+    var prevC = pe && pe.next.trim() ? pe.next : '';
+    h += '<article class="card" data-q="' + esc(q.id) + '">';
+    h += '<h2>' + esc(q.label) + (q.sensitive ? ' <span class="shield" title="Left out of summaries unless you include it">' + SHIELD + 'Private</span>' : '') + '</h2>';
+    if (q.prompt) h += '<p class="prompt">' + esc(q.prompt) + '</p>';
+    if (prevC) {
+      h += '<div class="prev"><small>Last week you committed to</small><p>' + esc(prevC) + '</p></div>';
+      h += '<div class="kept" role="group" aria-label="Did you keep it?">' +
+        '<button class="pill yes" data-kept="yes" aria-pressed="' + (e.kept === 'yes') + '">Kept it</button>' +
+        '<button class="pill no" data-kept="no" aria-pressed="' + (e.kept === 'no') + '">Missed it</button></div>';
+    } else {
+      h += '<p class="nocommit">No commitment from last week. Set one below.</p>';
+    }
+    h += '<label class="fld" for="a-' + esc(q.id) + '">Your answer</label>';
+    h += '<textarea id="a-' + esc(q.id) + '" data-f="answer">' + esc(e.answer) + '</textarea>';
+    h += '<label class="fld" for="n-' + esc(q.id) + '">Next week I commit to</label>';
+    h += '<textarea class="short" id="n-' + esc(q.id) + '" data-f="next">' + esc(e.next) + '</textarea>';
+    h += '</article>';
+  });
+  h += '<div class="saverow"><button class="btn" id="saveWeek">Save this week</button><span class="status" id="saveStatus"></span></div>';
+  $('p-week').innerHTML = h;
+  updateStatus();
+}
+function updateStatus(){
+  var s = $('saveStatus'); if (!s) return;
+  s.textContent = lastSaved ? 'Saved ' + fmtTime(lastSaved) : 'Autosaves as you go';
+}
+function saveField(ta){
+  var card = ta.closest('.card'); if (!card) return;
+  var qid = card.getAttribute('data-q'), f = ta.getAttribute('data-f');
+  var cur = entry(view, qid);
+  if ((cur ? cur[f] : '') === ta.value) return;
+  var p = {}; p[f] = ta.value; setEntry(view, qid, p); updateStatus();
+}
+function flushWeekFields(){
+  var panel = $('p-week'); if (!panel || panel.hidden) return;
+  var tas = panel.querySelectorAll('textarea[data-f]');
+  for (var i = 0; i < tas.length; i++) saveField(tas[i]);
+}
+
+/* ---------- Patterns ---------- */
+function windowKeys(){ var ks = []; for (var i = 7; i >= 0; i--) ks.push(addWeeks(view, -i)); return ks; }
+function rateFor(qid, ks){
+  var y = 0, n = 0;
+  ks.forEach(function(k){ var e = entry(k, qid); if (e && e.kept === 'yes') y++; else if (e && e.kept === 'no') n++; });
+  return {y:y, n:n};
+}
+function renderPatterns(){
+  var ks = windowKeys(), qs = questions(), h = '';
+  h += '<p class="hint">Eight weeks ending ' + esc(fmtLong(view)) + '. Tap a question to compare weeks side by side.</p>';
+  h += '<div class="grid"><div class="grow ghead" aria-hidden="true"><span></span>';
+  ks.forEach(function(k){ h += '<span class="' + (k === view ? 'cur' : '') + '">' + fmtShort(k) + '</span>'; });
+  h += '</div>';
+  qs.forEach(function(q){
+    var r = rateFor(q.id, ks), tot = r.y + r.n;
+    var sub = tot ? r.y + ' of ' + tot + ' kept' : 'No commitments measured';
+    h += '<button class="grow" data-row="' + esc(q.id) + '" aria-expanded="' + (openRow === q.id) + '" aria-label="' + esc(q.label + ', ' + sub) + '">';
+    h += '<span class="rl"><b>' + esc(q.label) + '</b><span>' + sub + '</span></span>';
+    ks.forEach(function(k){
+      var e = entry(k, q.id), c = e && e.kept === 'yes' ? 'y' : (e && e.kept === 'no' ? 'n' : 'u');
+      h += '<span class="cell"><span class="dot ' + c + '"></span></span>';
+    });
+    h += '</button>';
+  });
+  h += '</div>';
+  h += '<div class="legend"><span><i class="dot y"></i>Kept</span><span><i class="dot n"></i>Missed</span><span><i class="dot u"></i>Not marked</span></div>';
+  if (openRow) {
+    var q = null; qs.forEach(function(x){ if (x.id === openRow) q = x; });
+    if (q) {
+      h += '<div class="card"><h2>' + esc(q.label) + '</h2><p class="prompt">Week over week</p><div class="compare">';
+      for (var i = 0; i < 4; i++) {
+        var k = addWeeks(view, -i), e = entry(k, q.id);
+        var kc = e && e.kept === 'yes' ? 'y' : (e && e.kept === 'no' ? 'n' : 'u');
+        var kt = kc === 'y' ? 'Kept commitment' : (kc === 'n' ? 'Missed commitment' : 'Not marked');
+        h += '<div class="col' + (i >= 2 ? ' c34' : '') + '"><h3>' + (k === today ? 'This week' : 'Wk of ' + fmtShort(k)) + '</h3>';
+        h += '<div class="k ' + kc + '">' + kt + '</div>';
+        h += '<small>Answer</small><p>' + (e && e.answer.trim() ? esc(e.answer) : '<span class="empty">Nothing written</span>') + '</p>';
+        h += '<small>Committed to</small><p>' + (e && e.next.trim() ? esc(e.next) : '<span class="empty">None set</span>') + '</p></div>';
+      }
+      var r2 = rateFor(q.id, ks), t2 = r2.y + r2.n;
+      h += '</div><p class="rate">' + (t2 ? 'Over these eight weeks you kept ' + r2.y + ' of ' + t2 + ' commitments (' + Math.round(100 * r2.y / t2) + ' percent).' : 'No kept or missed marks in these eight weeks yet.') + '</p></div>';
+    }
+  }
+  $('p-pat').innerHTML = h;
+}
+
+/* ---------- Summary ---------- */
+function buildSummary(){
+  var qs = questions(), lines = [], sens = 0, any = false;
+  lines.push('Brotherhood Check-In');
+  lines.push('Week of ' + fmtLong(view));
+  qs.forEach(function(q){
+    if (!summaryInc[q.id]) return;
+    var e = entry(view, q.id); if (!e) return;
+    var parts = [];
+    if (e.kept) parts.push('Kept last week\'s commitment: ' + (e.kept === 'yes' ? 'Yes' : 'No'));
+    if (e.answer.trim()) parts.push(e.answer.trim());
+    if (e.next.trim()) parts.push('This week I commit to: ' + e.next.trim());
+    if (!parts.length) return;
+    any = true; if (q.sensitive) sens++;
+    lines.push(''); lines.push(q.label.toUpperCase());
+    parts.forEach(function(p){ lines.push(p); });
+  });
+  if (summaryClosing) { lines.push(''); lines.push(CLOSING); }
+  return {text: lines.join('\n'), sens: sens, any: any};
+}
+function renderSummary(){
+  var qs = questions(), h = '', left = 0;
+  h += '<div class="card"><h2>What to share</h2><p class="prompt">Private questions start unchecked every time. Checking one includes it in this summary only.</p>';
+  qs.forEach(function(q){
+    if (summaryInc[q.id] === undefined) summaryInc[q.id] = !q.sensitive;
+    if (!summaryInc[q.id]) left++;
+    h += '<label class="incl"><input type="checkbox" data-inc="' + esc(q.id) + '"' + (summaryInc[q.id] ? ' checked' : '') + '><span>' + esc(q.label) + '</span>' +
+      (q.sensitive ? '<span class="shield">' + SHIELD + 'Private</span>' : '') + '</label>';
+  });
+  h += '<label class="incl"><input type="checkbox" id="incClose"' + (summaryClosing ? ' checked' : '') + '><span>Closing line asking for prayer</span></label>';
+  h += '<p class="hint">' + (left ? left + (left === 1 ? ' question is' : ' questions are') + ' left out.' : 'Every question is included.') + '</p>';
+  h += '<button class="btn wide" id="gen">Generate summary</button></div>';
+  h += '<div id="sumOut"></div>';
+  $('p-sum').innerHTML = h;
+}
+function showSummary(){
+  var s = buildSummary(), h = '<div class="card"><h2>Your summary</h2>';
+  if (!s.any) h += '<p class="prompt">Nothing to share yet for this week among the checked questions. Fill in This Week first.</p>';
+  if (s.sens) h += '<p class="warn">This summary includes ' + s.sens + ' private ' + (s.sens === 1 ? 'answer' : 'answers') + '. Share it only with someone you trust.</p>';
+  h += '<label class="fld" for="sumText">Ready to copy</label><textarea class="out" id="sumText" readonly>' + esc(s.text) + '</textarea>';
+  h += '<div class="btnrow"><button class="btn" id="copy">Copy</button></div></div>';
+  $('sumOut').innerHTML = h;
+}
+function copyText(){
+  var ta = $('sumText'); if (!ta) return;
+  var txt = ta.value;
+  function fallback(){
+    try { ta.removeAttribute('readonly'); ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length);
+      var ok = document.execCommand('copy'); ta.setAttribute('readonly', ''); toast(ok ? 'Copied' : 'Select the text and copy it'); }
+    catch (e) { toast('Select the text and copy it'); }
+  }
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function(){ toast('Copied'); }, fallback);
+  else fallback();
+}
+
+/* ---------- Settings ---------- */
+var pendingImport = null;
+function renderSettings(){
+  var qs = questions(), h = '<h3>Questions</h3><p class="about">Edit the wording to fit your group. Private questions are marked with a shield and stay out of summaries unless you include them. Deleting a question keeps its past answers in your data.</p>';
+  qs.forEach(function(q, i){
+    h += '<div class="qed" data-eq="' + esc(q.id) + '">';
+    h += '<label class="fld" for="el-' + esc(q.id) + '">Label</label><input type="text" id="el-' + esc(q.id) + '" data-e="label" maxlength="60" value="' + esc(q.label) + '">';
+    h += '<label class="fld" for="ep-' + esc(q.id) + '">Prompt</label><textarea class="short" id="ep-' + esc(q.id) + '" data-e="prompt" maxlength="400">' + esc(q.prompt) + '</textarea>';
+    h += '<div class="row"><label class="check grow1"><input type="checkbox" data-e="sensitive"' + (q.sensitive ? ' checked' : '') + '>Private</label>';
+    h += '<button class="mini" data-mv="-1" aria-label="Move ' + esc(q.label) + ' up"' + (i === 0 ? ' disabled' : '') + '>' + UP + '</button>';
+    h += '<button class="mini" data-mv="1" aria-label="Move ' + esc(q.label) + ' down"' + (i === qs.length - 1 ? ' disabled' : '') + '>' + DOWN + '</button>';
+    h += '<button class="btn danger small" data-del="1">Delete</button></div></div>';
+  });
+  h += '<div class="btnrow"><button class="btn ghost" id="addQ">Add a question</button><button class="btn ghost" id="restoreQ">Restore defaults</button></div>';
+  h += '<h3>Your data</h3><p class="about">Export a backup file to move to a new phone or keep a copy. Import reads a backup made by this app.</p>';
+  h += '<div class="btnrow"><button class="btn ghost" id="exp">Export JSON</button><button class="btn ghost" id="imp">Import JSON</button></div>';
+  h += '<div class="choice" id="impChoice" hidden><button class="btn" id="impMerge">Merge with mine</button><button class="btn danger" id="impReplace">Replace mine</button></div>';
+  h += '<h3>Erase</h3><p class="about">Removes every question and answer from this phone. This cannot be undone, so export first if you want a copy.</p>';
+  h += '<button class="btn danger wide" id="erase">Erase all data</button>';
+  h += '<h3>About</h3><p class="about">A simple weekly practice for men who walk together: tell the truth about the week, name one concrete step for the next, and come back to it. Iron sharpens iron (Proverbs 27:17). AppADay 164 by Augustine Iacopelli. No accounts, no network calls, no tracking.</p>';
+  $('mbody').innerHTML = h;
+}
+function qById(id){ var r = null; data.questions.forEach(function(q){ if (q.id === id) r = q; }); return r; }
+function openModal(){ flushWeekFields(); pendingImport = null; renderSettings(); $('modal').hidden = false; $('mclose').focus(); }
+function closeModal(){ $('modal').hidden = true; resetSummaryKeepChoices(); renderAll(); $('gear').focus(); }
+function resetSummaryKeepChoices(){
+  var next = {};
+  questions().forEach(function(q){ next[q.id] = summaryInc[q.id] !== undefined && !q.sensitive ? summaryInc[q.id] : !q.sensitive; });
+  summaryInc = next;
+}
+function exportJson(){
+  try {
+    var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = 'brotherhood-check-in-' + keyOf(new Date()) + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    toast('Backup exported');
+  } catch (e) { toast('Export failed on this browser'); }
+}
+function mergeData(inc){
+  inc.questions.forEach(function(q){ if (!qById(q.id)) { q.order = data.questions.length + q.order; data.questions.push(q); } });
+  Object.keys(inc.weeks).forEach(function(k){
+    if (!data.weeks[k]) data.weeks[k] = {};
+    Object.keys(inc.weeks[k]).forEach(function(qid){
+      var a = data.weeks[k][qid], b = inc.weeks[k][qid];
+      if (!a || b.savedAt > a.savedAt) data.weeks[k][qid] = b;
+    });
+  });
+  renumber();
+}
+
+/* ---------- render ---------- */
+function renderAll(){
+  renderNav();
+  ['week','pat','sum'].forEach(function(t){
+    $('t-' + t).setAttribute('aria-selected', String(t === tab));
+    $('p-' + t).hidden = t !== tab;
+  });
+  if (tab === 'week') renderWeek();
+  if (tab === 'pat') renderPatterns();
+  if (tab === 'sum') renderSummary();
+}
+
+/* ---------- events ---------- */
+$('t-week').addEventListener('click', function(){ flushWeekFields(); tab = 'week'; renderAll(); });
+$('t-pat').addEventListener('click', function(){ flushWeekFields(); tab = 'pat'; renderAll(); });
+$('t-sum').addEventListener('click', function(){ flushWeekFields(); tab = 'sum'; renderAll(); });
+$('wprev').addEventListener('click', function(){ goWeek(addWeeks(view, -1)); });
+$('wnext').addEventListener('click', function(){ if (view < today) goWeek(addWeeks(view, 1)); });
+$('wsub').addEventListener('click', function(ev){ if (ev.target.id === 'wtoday') goWeek(today); });
+
+var pw = $('p-week');
+pw.addEventListener('focusout', function(ev){ if (ev.target.matches('textarea[data-f]')) saveField(ev.target); });
+pw.addEventListener('click', function(ev){
+  var b = ev.target.closest('button'); if (!b) return;
+  if (b.id === 'saveWeek') { flushWeekFields(); if (persist()) { lastSaved = Date.now(); updateStatus(); toast('Week saved'); } return; }
+  var kv = b.getAttribute('data-kept');
+  if (kv) {
+    var card = b.closest('.card'), qid = card.getAttribute('data-q');
+    var cur = entry(view, qid), nv = cur && cur.kept === kv ? '' : kv;
+    setEntry(view, qid, {kept: nv});
+    var pills = card.querySelectorAll('[data-kept]');
+    for (var i = 0; i < pills.length; i++) pills[i].setAttribute('aria-pressed', String(pills[i].getAttribute('data-kept') === nv));
+    updateStatus();
+  }
+});
+
+$('p-pat').addEventListener('click', function(ev){
+  var b = ev.target.closest('[data-row]'); if (!b) return;
+  var id = b.getAttribute('data-row'); openRow = openRow === id ? null : id; renderPatterns();
+});
+
+var ps = $('p-sum');
+ps.addEventListener('change', function(ev){
+  var t = ev.target;
+  if (t.hasAttribute('data-inc')) { summaryInc[t.getAttribute('data-inc')] = t.checked; renderSummaryKeepOut(); }
+  if (t.id === 'incClose') { summaryClosing = t.checked; renderSummaryKeepOut(); }
+});
+function renderSummaryKeepOut(){ var had = !!$('sumText'); renderSummary(); if (had) showSummary(); }
+ps.addEventListener('click', function(ev){
+  var b = ev.target.closest('button'); if (!b) return;
+  if (b.id === 'gen') { showSummary(); var o = $('sumOut'); if (o && o.scrollIntoView) o.scrollIntoView({behavior:'smooth', block:'start'}); }
+  if (b.id === 'copy') copyText();
+});
+
+$('gear').addEventListener('click', openModal);
+$('mclose').addEventListener('click', closeModal);
+$('modal').addEventListener('click', function(ev){ if (ev.target === $('modal')) closeModal(); });
+document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape' && !$('modal').hidden) closeModal(); });
+
+var mb = $('mbody');
+mb.addEventListener('change', function(ev){
+  var t = ev.target, box = t.closest('[data-eq]'); if (!box) return;
+  var q = qById(box.getAttribute('data-eq')); if (!q) return;
+  var f = t.getAttribute('data-e');
+  if (f === 'label') { q.label = t.value.trim() ? t.value.trim().slice(0, 60) : 'Question'; t.value = q.label; }
+  if (f === 'prompt') q.prompt = t.value.slice(0, 400);
+  if (f === 'sensitive') q.sensitive = t.checked;
+  if (persist()) toast('Question updated');
+});
+mb.addEventListener('click', function(ev){
+  var b = ev.target.closest('button'); if (!b) return;
+  var box = b.closest('[data-eq]');
+  if (box && b.hasAttribute('data-mv')) {
+    var qs = questions(), id = box.getAttribute('data-eq'), d = +b.getAttribute('data-mv'), i = -1;
+    qs.forEach(function(q, j){ if (q.id === id) i = j; });
+    var j2 = i + d; if (i < 0 || j2 < 0 || j2 >= qs.length) return;
+    var tmp = qs[i]; qs[i] = qs[j2]; qs[j2] = tmp;
+    qs.forEach(function(q, k){ q.order = k; });
+    persist(); renderSettings(); return;
+  }
+  if (box && b.hasAttribute('data-del')) {
+    armConfirm(b, function(){
+      var id2 = box.getAttribute('data-eq');
+      data.questions = data.questions.filter(function(q){ return q.id !== id2; });
+      renumber(); if (openRow === id2) openRow = null; persist(); renderSettings(); toast('Question deleted. Past answers kept.');
+    });
+    return;
+  }
+  if (b.id === 'addQ') {
+    data.questions.push({id:newId(), label:'New question', prompt:'', sensitive:false, order:data.questions.length});
+    persist(); renderSettings();
+    var eds = mb.querySelectorAll('input[data-e="label"]'); if (eds.length) { eds[eds.length - 1].focus(); eds[eds.length - 1].select(); }
+    return;
+  }
+  if (b.id === 'restoreQ') { armConfirm(b, function(){ data.questions = seedQuestions(); persist(); renderSettings(); toast('Default questions restored'); }); return; }
+  if (b.id === 'exp') { exportJson(); return; }
+  if (b.id === 'imp') { $('importFile').value = ''; $('importFile').click(); return; }
+  if (b.id === 'impMerge' && pendingImport) { mergeData(pendingImport); pendingImport = null; persist(); renderSettings(); toast('Backup merged'); return; }
+  if (b.id === 'impReplace' && pendingImport) {
+    armConfirm(b, function(){ data = pendingImport; pendingImport = null; persist(); renderSettings(); toast('Data replaced from backup'); });
+    return;
+  }
+  if (b.id === 'erase') {
+    armConfirm(b, function(){
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      data = {version: VERSION, questions: seedQuestions(), weeks: {}}; persist(); openRow = null; lastSaved = 0;
+      renderSettings(); toast('All data erased');
+    });
+  }
+});
+$('importFile').addEventListener('change', function(){
+  var f = this.files && this.files[0]; if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function(){
+    var parsed = null;
+    try { parsed = sanitize(JSON.parse(String(rd.result))); } catch (e) { parsed = null; }
+    if (!parsed) { toast('That file is not a Brotherhood Check-In backup'); return; }
+    pendingImport = parsed;
+    var c = $('impChoice'); if (c) c.hidden = false;
+    toast('Backup read: ' + parsed.questions.length + ' questions, ' + Object.keys(parsed.weeks).length + ' weeks');
+  };
+  rd.onerror = function(){ toast('Could not read that file'); };
+  rd.readAsText(f);
+});
+
+window.addEventListener('pagehide', flushWeekFields);
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState === 'hidden') flushWeekFields();
+  else { var t = sundayKey(new Date()); if (t !== today) { var wasCurrent = view === today; today = t; if (wasCurrent) view = t; resetSummary(); renderAll(); } }
+});
+
+if (!data.questions.length && !Object.keys(data.weeks).length) data.questions = seedQuestions();
+persist();
+resetSummary();
+renderAll();
+})();
+</script>
+</body>
+</html>
